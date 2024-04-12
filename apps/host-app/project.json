@@ -1,27 +1,27 @@
 {
-  "name": "asseco-demo",
+  "name": "host-app",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/asseco-demo/src",
+  "sourceRoot": "apps/host-app/src",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/asseco-demo",
-        "index": "apps/asseco-demo/src/index.html",
-        "browser": "apps/asseco-demo/src/main.ts",
+        "outputPath": "dist/apps/host-app",
+        "index": "apps/host-app/src/index.html",
+        "main": "apps/host-app/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/asseco-demo/tsconfig.app.json",
+        "tsConfig": "apps/host-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/asseco-demo/src/favicon.ico",
-          "apps/asseco-demo/src/assets"
-        ],
-        "styles": ["apps/asseco-demo/src/styles.scss"],
-        "scripts": []
+        "assets": ["apps/host-app/src/favicon.ico", "apps/host-app/src/assets"],
+        "styles": ["apps/host-app/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/host-app/webpack.config.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -37,24 +37,34 @@
               "maximumError": "4kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/host-app/webpack.prod.config.ts"
+          }
         },
         "development": {
+          "buildOptimizer": false,
           "optimization": false,
+          "vendorChunk": true,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "namedChunks": true
         }
       },
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:module-federation-dev-server",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      },
       "configurations": {
         "production": {
-          "buildTarget": "asseco-demo:build:production"
+          "buildTarget": "host-app:build:production"
         },
         "development": {
-          "buildTarget": "asseco-demo:build:development"
+          "buildTarget": "host-app:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -62,7 +72,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "buildTarget": "asseco-demo:build"
+        "buildTarget": "host-app:build"
       }
     },
     "lint": {
@@ -72,7 +82,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/asseco-demo/jest.config.ts"
+        "jestConfig": "apps/host-app/jest.config.ts"
       }
     }
   }

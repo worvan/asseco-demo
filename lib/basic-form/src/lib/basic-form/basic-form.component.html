@@ -1,0 +1,5 @@
+<form [formGroup]="formGroup">
+  Name: <input type="text" formControlName="inputName">
+  Surname: <input type="text" formControlName="inputSurname">
+  <button (click)="printInfo(formGroup?.controls)">Print info in console</button>
+</form>
